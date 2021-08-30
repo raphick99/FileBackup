@@ -14,23 +14,19 @@ void Session::run(boost::asio::ip::tcp::socket client_socket_)
 {
 	Session current_session{ std::move(client_socket_) };
 	std::cout << "client connected!\n";
-	while (1)
+	try
 	{
-		try
+		current_session.handle_request();
+	}
+	catch (const InternalException& e)
+	{
+		if (e.status == InternalStatus::Utility_SocketClosedAtOtherEndpoint)
 		{
-			current_session.handle_request();
+			std::cout << "Client Closed Connection! killing thread...\n";
 		}
-		catch (const InternalException& e)
+		else
 		{
-			if (e.status == InternalStatus::Session_SocketClosedAtOtherEndpoint)
-			{
-				std::cout << "Client Closed Connection! killing thread...\n";
-			}
-			else
-			{
-				std::cout << "internal exception thrown\nstatus: " << static_cast<std::underlying_type_t<InternalStatus>>(e.status) << "\n";
-			}
-			return;
+			std::cout << "internal exception thrown\nstatus: " << static_cast<std::underlying_type_t<InternalStatus>>(e.status) << "\n";
 		}
 	}
 }

@@ -14,19 +14,14 @@ public:
 		std::string buffer;
 		buffer.resize(buffer_size);
 
-		boost::system::error_code error_code;
-		std::size_t reply_length = boost::asio::read(socket, boost::asio::buffer(buffer.data(), buffer_size), error_code);
+		std::size_t reply_length = boost::asio::read(socket, boost::asio::buffer(buffer.data(), buffer_size));
 		if (reply_length == 0)
 		{
-			throw InternalException(InternalStatus::Session_SocketClosedAtOtherEndpoint);
+			throw InternalException(InternalStatus::Utility_SocketClosedAtOtherEndpoint);
 		}
 		if (reply_length != buffer_size)
 		{
-			throw InternalException(InternalStatus::Session_IncompleteRead);
-		}
-		if (error_code && error_code == boost::asio::error::eof)
-		{
-			throw InternalException(InternalStatus::Session_EofReached);
+			throw InternalException(InternalStatus::Utility_IncompleteRead);
 		}
 		return buffer;
 	}
@@ -35,19 +30,14 @@ public:
 	static T read_struct(boost::asio::ip::tcp::socket& socket)
 	{
 		T t{};
-		boost::system::error_code error_code;
-		std::size_t reply_length = boost::asio::read(socket, boost::asio::buffer(&t, sizeof(t)), error_code);
+		std::size_t reply_length = boost::asio::read(socket, boost::asio::buffer(&t, sizeof(t)));
 		if (reply_length == 0)
 		{
-			throw InternalException(InternalStatus::Session_SocketClosedAtOtherEndpoint);
+			throw InternalException(InternalStatus::Utility_SocketClosedAtOtherEndpoint);
 		}
 		if (reply_length != sizeof(t))
 		{
-			throw InternalException(InternalStatus::Session_IncompleteRead);
-		}
-		if (error_code && error_code == boost::asio::error::eof)
-		{
-			throw InternalException(InternalStatus::Session_EofReached);
+			throw InternalException(InternalStatus::Utility_IncompleteRead);
 		}
 		return t;
 	}
@@ -59,7 +49,7 @@ public:
 		std::size_t write_length = boost::asio::write(socket, boost::asio::buffer(string_to_write.data(), string_to_write.size()));
 		if (write_length != string_to_write.size())
 		{
-			// TODO throw exception;
+			throw InternalException(InternalStatus::Utility_IncompleteWrite);
 		}
 	}
 
@@ -69,7 +59,7 @@ public:
 		std::size_t write_length = boost::asio::write(socket, boost::asio::buffer(&t, sizeof(t)));
 		if (write_length != sizeof(t))
 		{
-			// TODO throw exception;
+			throw InternalException(InternalStatus::Utility_IncompleteWrite);
 		}
 	}
 };
