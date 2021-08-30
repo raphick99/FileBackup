@@ -62,8 +62,7 @@ Protocol::InternalResponse Handler::RecoverFile(const Protocol::InternalRequest&
 	internal_response.response_header.status = Protocol::Status::SuccessFileRecovered;
 	internal_response.filename = internal_request.filename.value();
 
-	std::ifstream file(file_path);
-	file >> internal_response.payload.value();
+	internal_response.payload = read_whole_file(file_path);
 	return internal_response;
 }
 
@@ -142,4 +141,12 @@ std::string Handler::generate_random_filename()
 	}
 
 	return random_filename.str();
+}
+
+std::string Handler::read_whole_file(std::filesystem::path file_path)
+{
+	std::ifstream file(file_path);
+	std::stringstream payload;
+	payload << file.rdbuf();
+	return payload.str();
 }

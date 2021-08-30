@@ -16,4 +16,5 @@ public:
 private:
 	static std::filesystem::path get_user_directory_path(uint32_t);
 	static std::string generate_random_filename();
+	static std::string read_whole_file(std::filesystem::path);
 };
