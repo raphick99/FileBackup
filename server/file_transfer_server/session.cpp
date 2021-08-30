@@ -10,32 +10,19 @@ Session::Session(boost::asio::ip::tcp::socket client_socket_) :
 	client_socket(std::move(client_socket_))
 {}
 
-void Session::run(boost::asio::ip::tcp::socket client_socket_)
+void Session::handle_request()
 {
-	Session current_session{ std::move(client_socket_) };
 	std::cout << "client connected!\n";
 	try
 	{
-		current_session.handle_request();
+		auto internal_request = parse_request();
+		Protocol::InternalResponse internal_response = execute_request(internal_request);
+		write_response(internal_response);
 	}
 	catch (const InternalException& e)
 	{
-		if (e.status == InternalStatus::Utility_SocketClosedAtOtherEndpoint)
-		{
-			std::cout << "Client Closed Connection! killing thread...\n";
-		}
-		else
-		{
-			std::cout << "internal exception thrown\nstatus: " << static_cast<std::underlying_type_t<InternalStatus>>(e.status) << "\n";
-		}
+		std::cout << "internal exception thrown\nstatus: " << static_cast<std::underlying_type_t<InternalStatus>>(e.status) << "\n";
 	}
-}
-
-void Session::handle_request()
-{
-	auto internal_request = parse_request();
-	Protocol::InternalResponse internal_response = execute_request(internal_request);
-	write_response(internal_response);
 }
 
 Protocol::InternalRequest Session::parse_request()

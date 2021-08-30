@@ -11,6 +11,6 @@ void Server::serve_forever()
 {
 	while (1)
 	{
-		std::thread(&Session::run, std::move(acceptor.accept())).detach();
+		std::thread(&Session::handle_request, Session{ acceptor.accept() }).detach();
 	}
 }

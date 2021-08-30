@@ -10,10 +10,9 @@ class Session
 {
 public:
 	Session(boost::asio::ip::tcp::socket);
-	static void run(boost::asio::ip::tcp::socket);
+	void handle_request();
 
 private:
-	void handle_request();
 	Protocol::InternalRequest parse_request();
 	Protocol::InternalResponse execute_request(const Protocol::InternalRequest&);
 	void write_response(Protocol::InternalResponse);
