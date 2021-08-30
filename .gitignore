@@ -34,3 +34,5 @@
 *.vs
 *.idea
 client/__pychache__/
+Debug/
+Release/
