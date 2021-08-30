@@ -6,6 +6,10 @@
 #include "protocol/request_header.hpp"
 #include "protocol/response_header.hpp"
 
+/*
+* Takes care of a single session, once a client connects.
+* Right after the request is taken care of and a response is send back to the client, the socket is closed.
+*/
 class Session
 {
 public:

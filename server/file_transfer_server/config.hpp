@@ -3,6 +3,9 @@
 #include <cstdint>
 #include <string>
 
+/*
+* Config namespace. declares configurations for the project
+*/
 namespace Config
 {
 	static const uint16_t port = 13337;

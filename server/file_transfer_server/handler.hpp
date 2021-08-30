@@ -5,6 +5,9 @@
 #include "protocol/request_header.hpp"
 #include "protocol/response_header.hpp"
 
+/*
+* Handler class. contains static handlers for all supported protocol actions.
+*/
 class Handler
 {
 public:

@@ -1,5 +1,8 @@
 #pragma once
 
+/*
+* Represents the possible internal statuses that may arrise.
+*/
 enum class InternalStatus
 {
 	Uninitialized = -1,

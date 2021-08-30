@@ -3,6 +3,9 @@
 #include <string>
 #include <boost/asio.hpp>
 
+/*
+* Utility class, contains all kind of useful functions that dont belong anywhere else.
+*/
 class Utility
 {
 public:

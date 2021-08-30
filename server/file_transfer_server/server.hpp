@@ -3,6 +3,9 @@
 #include <cstdint>
 #include <boost/asio.hpp>
 
+/*
+* Server, takes care of each incoming client, and sends it off, starting a session for the client.
+*/
 class Server
 {
 public:
