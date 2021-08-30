@@ -27,6 +27,5 @@ def main():
     print(c.execute_request(Op.RecoverFile, filename=backed_up_file))  # attempt to recover it again
 
 
-
 if __name__ == '__main__':
     main()

@@ -131,7 +131,7 @@ std::filesystem::path Handler::get_user_directory_path(uint32_t user_id)
 
 std::string Handler::generate_random_filename()
 {
-	std::srand(std::time(nullptr));
+	std::srand(std::time(nullptr));  // Seed random. If 2 clients connect in the same second, they will have the same filename.
 	std::stringstream random_filename;
 	char letters_and_numbers[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
