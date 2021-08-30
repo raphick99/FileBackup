@@ -1,10 +1,10 @@
 #include <iostream>
 #include <exception>
-#include <optional>
 #include <string>
 #include <cstdint>
 #include "session.hpp"
 #include "handler.hpp"
+#include "utility.hpp"
 
 Session::Session(boost::asio::ip::tcp::socket client_socket_) :
 	client_socket(std::move(client_socket_))
@@ -46,18 +46,18 @@ Protocol::InternalRequest Session::parse_request()
 {
 	Protocol::InternalRequest internal_request{};
 
-	internal_request.request_header = read_struct<Protocol::RequestHeader>();
+	internal_request.request_header = Utility::read_struct<Protocol::RequestHeader>(client_socket);
 	
 	switch (internal_request.request_header.op)
 	{
 	case Protocol::Op::BackupFile:
-		internal_request.filename = read_prefixed_string<uint16_t>();
-		internal_request.payload = read_prefixed_string<uint32_t>();
+		internal_request.filename = Utility::read_prefixed_string<uint16_t>(client_socket);
+		internal_request.payload = Utility::read_prefixed_string<uint32_t>(client_socket);
 		break;
 
 	case Protocol::Op::RecoverFile:
 	case Protocol::Op::DeleteBackedUpFile:
-		internal_request.filename = read_prefixed_string<uint16_t>();
+		internal_request.filename = Utility::read_prefixed_string<uint16_t>(client_socket);
 		break;
 
 	case Protocol::Op::ListFiles:
@@ -101,13 +101,13 @@ Protocol::InternalResponse Session::execute_request(const Protocol::InternalRequ
 
 void Session::write_response(Protocol::InternalResponse internal_response)
 {
-	write_struct(internal_response.response_header);
+	Utility::write_struct(client_socket, internal_response.response_header);
 	if (internal_response.filename)
 	{
-		write_prefixed_string<uint16_t>(internal_response.filename.value());
+		Utility::write_prefixed_string<uint16_t>(client_socket, internal_response.filename.value());
 	}
 	if (internal_response.payload)
 	{
-		write_prefixed_string<uint32_t>(internal_response.payload.value());
+		Utility::write_prefixed_string<uint32_t>(client_socket, internal_response.payload.value());
 	}
 }
