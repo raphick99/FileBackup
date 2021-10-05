@@ -31,8 +31,12 @@
 *.out
 *.app
 
-*.vs
-*.idea
-client/__pychache__/
-Debug/
-Release/
+# Personal
+__pycache__
+.idea
+.vs
+[Dd]ebug
+[Rr]elease
+*.suo
+*.user
+

@@ -3,7 +3,7 @@
 #include "config.hpp"
 #include "server.hpp"
 
-int main(void)
+int main()
 {
 	try
 	{
@@ -16,3 +16,4 @@ int main(void)
 		std::cerr << "Exception in thread: " << e.what() << "\n";
 	}
 }
+
